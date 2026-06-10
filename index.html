@@ -82,6 +82,12 @@
       height: calc(100vh - 120px);
       min-height: 400px;
       overflow: hidden;
+      transition: height 0.25s ease;
+    }
+
+    body.admin-open .chat-wrap {
+      height: 45vh;
+      min-height: 300px;
     }
 
     /* ── Messages ── */
@@ -807,11 +813,8 @@ async function sendMessage() {
     input.value = "";
     autoResize(input);
     adminUnlocked = true;
-    const wrap = document.getElementById("adminToggleWrap");
-    wrap.style.display = "block";
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("adminToggle").classList.add("active");
-    renderEntries();
+    document.getElementById("adminToggleWrap").style.display = "block";
+    openAdminPanel();
     return; // don't show the password in chat
   }
 
@@ -829,17 +832,25 @@ async function sendMessage() {
   isThinking = false;
 }
 
+function openAdminPanel() {
+  const panel = document.getElementById("adminPanel");
+  panel.style.display = "block";
+  document.getElementById("adminToggle").classList.add("active");
+  document.body.classList.add("admin-open");
+  renderEntries();
+  setTimeout(() => panel.scrollIntoView({ behavior: "smooth", block: "start" }), 300);
+}
+
+function closeAdminPanel() {
+  document.getElementById("adminPanel").style.display = "none";
+  document.getElementById("adminToggle").classList.remove("active");
+  document.body.classList.remove("admin-open");
+}
+
 function toggleAdminPanel() {
   const panel = document.getElementById("adminPanel");
-  const btn   = document.getElementById("adminToggle");
-  if (panel.style.display === "block") {
-    panel.style.display = "none";
-    btn.classList.remove("active");
-  } else {
-    panel.style.display = "block";
-    btn.classList.add("active");
-    renderEntries();
-  }
+  if (panel.style.display === "block") closeAdminPanel();
+  else openAdminPanel();
 }
 
 async function generateReply(question) {
