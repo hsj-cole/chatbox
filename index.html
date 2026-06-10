@@ -451,7 +451,7 @@
 <!-- Header -->
 <header>
   <div class="header-title">Chat <span>HSJ</span></div>
-  <button class="admin-btn" id="adminToggle" onclick="handleAdminClick()">⚙ Profesor</button>
+  <div id="adminToggleWrap" style="display:none;"><button class="admin-btn active" id="adminToggle" onclick="toggleAdminPanel()">⚙ Profesor</button></div>
 </header>
 
 <!-- Chat -->
@@ -514,8 +514,8 @@ const API_BASE     = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}
 
 // ─── Contraseñas (hasheadas con SHA-256) ───
 // PW1: motherfucker   PW2: hsj2526
-const PW1_HASH = "8b4a3f6c2e1d9b0c7a5f3e8d2c6b1a9e4f7d0c3b8a2e5f1d6c9b0e4a7f3d2c1b";
-const PW2_HASH = "a3f7c2b1e8d4f9a6c0b5e2d7f1a4c8b3e6d0f2a9c5b8e1d3f7a0c4b6e9d2f5a1";
+const PW1_HASH = "2f5f6ce5ae30b54aa5d7ced1ba566982bab34ba2814a51ce1865d2c2d8815cd4";
+const PW2_HASH = "f1561a16b0aaee7c6f806795c440778ace9f1cdadfe826df456c48da7159e981";
 
 // ─── Runtime state ───
 let knowledgeBase = [];
@@ -526,7 +526,7 @@ let editingIndex  = -1;
 let pendingAction = null; // 'admin' | 'edit'
 let pendingConfirm = null; // track repeated questions
 let isThinking    = false;
-let GITHUB_TOKEN  = null; // se carga desde data.json o se pedirá al admin
+let GITHUB_TOKEN  = localStorage.getItem("hsj_gh_token") || null; // solo vive en el navegador del profesor
 
 // ─── SHA-256 helper ───
 async function sha256(message) {
@@ -539,16 +539,16 @@ async function sha256(message) {
 // ─── GitHub API ───
 async function fetchData() {
   try {
-    const res = await fetch(API_BASE, {
-      headers: GITHUB_TOKEN ? { Authorization: `token ${GITHUB_TOKEN}` } : {}
+    // Public repo: read without any token
+    const res = await fetch(API_BASE + "?t=" + Date.now(), {
+      headers: { Accept: "application/vnd.github+json" }
     });
-    if (!res.ok) return;
+    if (!res.ok) { console.warn("Could not load data, status:", res.status); return; }
     const json = await res.json();
     fileSHA = json.sha;
-    const decoded = atob(json.content.replace(/\n/g,''));
+    const decoded = decodeURIComponent(escape(atob(json.content.replace(/\n/g,''))));
     const parsed  = JSON.parse(decoded);
     knowledgeBase = parsed.entries || [];
-    GITHUB_TOKEN  = parsed._token || GITHUB_TOKEN;
   } catch(e) { console.warn("Could not load data:", e); }
 }
 
@@ -559,7 +559,7 @@ async function saveData() {
   }
   try {
     setSaveStatus("Guardando...", "info");
-    const payload = { entries: knowledgeBase, _token: GITHUB_TOKEN };
+    const payload = { entries: knowledgeBase };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
     const body    = { message: "Update data", content, branch: GITHUB_BRANCH };
     if (fileSHA) body.sha = fileSHA;
@@ -575,7 +575,13 @@ async function saveData() {
 
     if (!res.ok) {
       const err = await res.json();
-      setSaveStatus("Error al guardar: " + (err.message || res.status), "err");
+      if (res.status === 401) {
+        GITHUB_TOKEN = null;
+        localStorage.removeItem("hsj_gh_token");
+        setSaveStatus("Token inválido o caducado. Vuelve a guardar para introducir uno nuevo.", "err");
+      } else {
+        setSaveStatus("Error al guardar: " + (err.message || res.status), "err");
+      }
       return false;
     }
     const data = await res.json();
@@ -627,41 +633,6 @@ document.getElementById("pwInput").addEventListener("keydown", e => {
 });
 
 // ─── Admin flow ───
-async function handleAdminClick() {
-  if (adminUnlocked) {
-    // toggle panel
-    const panel = document.getElementById("adminPanel");
-    const btn   = document.getElementById("adminToggle");
-    if (panel.style.display === "block") {
-      panel.style.display = "none";
-      btn.classList.remove("active");
-    } else {
-      panel.style.display = "block";
-      btn.classList.add("active");
-      renderEntries();
-    }
-    return;
-  }
-
-  const result = await openPwScreen(
-    "Acceso profesor",
-    "Introduce la contraseña de profesor para continuar."
-  );
-  if (!result) return;
-
-  const hash = await sha256(result.raw);
-  if (hash === PW1_HASH) {
-    adminUnlocked = true;
-    document.getElementById("adminPanel").style.display = "block";
-    document.getElementById("adminToggle").classList.add("active");
-    renderEntries();
-  } else {
-    // wrong — show error briefly
-    document.getElementById("pwScreen").classList.add("open");
-    document.getElementById("pwError").textContent = "Contraseña incorrecta.";
-    setTimeout(closePwScreen, 1500);
-  }
-}
 
 // ─── Add entry ───
 async function handleAddEntry() {
@@ -695,10 +666,11 @@ async function addEntry() {
   if (!GITHUB_TOKEN) {
     const t = await openPwScreen(
       "Token de GitHub necesario",
-      "Para guardar datos en la nube necesitas introducir tu token de GitHub."
+      "Introduce tu token de GitHub (ghp_...). Se guardará solo en este navegador, nunca en GitHub."
     );
-    if (!t) return;
+    if (!t || !t.raw) return;
     GITHUB_TOKEN = t.raw;
+    localStorage.setItem("hsj_gh_token", GITHUB_TOKEN);
   }
 
   knowledgeBase.push({ topic, content, date: new Date().toISOString() });
@@ -829,6 +801,20 @@ async function sendMessage() {
   const text  = input.value.trim();
   if (!text) return;
 
+  // ── Secret admin trigger ──
+  const hash = await sha256(text.trim());
+  if (hash === PW1_HASH) {
+    input.value = "";
+    autoResize(input);
+    adminUnlocked = true;
+    const wrap = document.getElementById("adminToggleWrap");
+    wrap.style.display = "block";
+    document.getElementById("adminPanel").style.display = "block";
+    document.getElementById("adminToggle").classList.add("active");
+    renderEntries();
+    return; // don't show the password in chat
+  }
+
   input.value = "";
   autoResize(input);
   addMessage(text, "user");
@@ -841,6 +827,19 @@ async function sendMessage() {
   const reply = await generateReply(text);
   addMessage(reply, "bot");
   isThinking = false;
+}
+
+function toggleAdminPanel() {
+  const panel = document.getElementById("adminPanel");
+  const btn   = document.getElementById("adminToggle");
+  if (panel.style.display === "block") {
+    panel.style.display = "none";
+    btn.classList.remove("active");
+  } else {
+    panel.style.display = "block";
+    btn.classList.add("active");
+    renderEntries();
+  }
 }
 
 async function generateReply(question) {
