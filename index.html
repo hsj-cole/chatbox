@@ -187,7 +187,7 @@ function send() {
   var xhr = new XMLHttpRequest();
   xhr.open('POST', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', true);
   xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.setRequestHeader('x-goog-api-key', GEMINI_KEY);
+  xhr.setRequestHeader('Authorization', 'Bearer ' + GEMINI_KEY);
   xhr.onload = function() {
     removeTyping();
     try {
