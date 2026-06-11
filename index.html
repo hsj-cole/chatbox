@@ -871,12 +871,13 @@ async function generateReply(question) {
   if (matches.length > 0) {
     pendingConfirm = null;
     const lang = detectLang(question);
-    const top  = matches.slice(0,3);
-    if (lang === "es") {
-      return top.map(e => `📌 **${e.topic}**\n${e.content}`).join("\n\n");
-    } else {
-      return top.map(e => `📌 **${e.topic}**\n${e.content}`).join("\n\n");
-    }
+    return matches.map(e => {
+      // Si la entrada es bilingüe (separada por //), mostrar solo el idioma de la pregunta
+      const parts = e.content.split("//").map(p => p.trim());
+      let body = e.content;
+      if (parts.length === 2) body = lang === "es" ? parts[0] : parts[1];
+      return `📌 ${e.topic}\n${body}`;
+    }).join("\n\n");
   }
 
   // Call Claude API for a smarter match
@@ -916,25 +917,72 @@ ${context}`,
 }
 
 // ─── Search helpers ───
+const STOPWORDS = new Set(["que","qué","como","cómo","cual","cuál","cuando","cuándo","donde","dónde","quien","quién","para","con","por","los","las","una","uno","unos","unas","del","este","esta","esto","hay","son","ser","esta","están","esta","está","tiene","tienen","puede","pueden","hace","hago","hacer","debo","debe","the","what","when","where","how","who","can","does","do","is","are","was","were","will","should","must","have","has","about","for","and","with","that","this","there","mis","sus","nuestro","vuestra","si","sí","sin","más","menos","muy","todo","toda","todos","todas","algo","sobre"]);
+
+function normalizeText(str) {
+  return str.toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")  // quita acentos
+    .replace(/[^a-z0-9ñ\s]/g, " ")                       // quita puntuación
+    .replace(/\s+/g, " ").trim();
+}
+
+function extractWords(text) {
+  return normalizeText(text).split(" ").filter(w =>
+    (w.length > 2 || /\d/.test(w)) && !STOPWORDS.has(w)
+  ); // se conservan tokens con números aunque sean cortos (2a, 2b, 2c, 10...)
+}
+
+function searchKBScored(query) {
+  const words = extractWords(query);
+  if (words.length === 0) return [];
+  return knowledgeBase.map(e => {
+    const topicNorm   = normalizeText(e.topic);
+    const contentNorm = normalizeText(e.content);
+    let score = 0, matched = 0;
+    for (const w of words) {
+      let hit = false;
+      if (topicNorm.includes(w))   { score += 3; hit = true; }  // título vale más
+      if (contentNorm.includes(w)) { score += Math.max(1, Math.min(w.length - 2, 3)); hit = true; } // palabras largas valen más, mínimo 1
+      if (hit) matched++;
+    }
+    const coverage = matched / words.length;
+    return { entry: e, score, coverage };
+  }).filter(s => s.score > 0)
+    .sort((a, b) => b.score - a.score);
+}
+
 function searchKB(query) {
-  const q = query.toLowerCase();
-  const words = q.split(/\s+/).filter(w => w.length > 2);
-  return knowledgeBase.filter(e => {
-    const combined = (e.topic + " " + e.content).toLowerCase();
-    return words.some(w => combined.includes(w));
-  });
+  const scored = searchKBScored(query);
+  if (scored.length === 0) return [];
+  const best = scored[0];
+  // Relevancia mínima: o buena puntuación o buena cobertura de la pregunta
+  if (best.score < 3 && best.coverage < 0.5) return [];
+  // Solo se incluye una segunda entrada si es casi tan relevante como la primera
+  const results = [best.entry];
+  if (scored[1] && scored[1].score >= best.score * 0.75 && (scored[1].score >= 4 || scored[1].coverage >= 0.5)) {
+    results.push(scored[1].entry);
+  }
+  return results;
 }
 
 function similarity(a, b) {
-  const wa = new Set(a.split(/\s+/));
-  const wb = new Set(b.split(/\s+/));
+  const wa = new Set(extractWords(a));
+  const wb = new Set(extractWords(b));
+  if (wa.size === 0 || wb.size === 0) return a.trim() === b.trim() ? 1 : 0;
   const inter = [...wa].filter(w => wb.has(w)).length;
   return inter / Math.max(wa.size, wb.size);
 }
 
 function detectLang(text) {
-  const esWords = /\b(el|la|los|las|un|una|que|de|en|y|es|son|para|con|como|tiene|hay|qué|cuándo|dónde|cómo|quién)\b/i;
-  return esWords.test(text) ? "es" : "en";
+  // Señales inequívocas de español
+  if (/[¿¡ñáéíóúü]/i.test(text)) return "es";
+  // Palabras comunes (sobre texto normalizado sin acentos para evitar fallos con \b)
+  const norm = text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const esWords = /\b(el|la|los|las|un|una|que|de|en|es|son|para|con|como|tiene|hay|cuando|donde|quien|mi|hijo|hija|se|puede|pueden|dia|cual)\b/;
+  const enWords = /\b(the|what|when|where|how|is|are|can|my|child|day|does|do|will|should)\b/;
+  const esHits = (norm.match(esWords) || []).length;
+  if (enWords.test(norm) && !esWords.test(norm)) return "en";
+  return esWords.test(norm) ? "es" : "en";
 }
 
 function escHtml(str) {
