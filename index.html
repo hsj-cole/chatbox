@@ -518,10 +518,10 @@ const GITHUB_BRANCH = "main";
 const DATA_FILE    = "data.json";
 const API_BASE     = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${DATA_FILE}`;
 
-// ─── Contraseñas (hasheadas con SHA-256) ───
-// PW1: motherfucker   PW2: hsj2526
-const PW1_HASH = "2f5f6ce5ae30b54aa5d7ced1ba566982bab34ba2814a51ce1865d2c2d8815cd4";
-const PW2_HASH = "f1561a16b0aaee7c6f806795c440778ace9f1cdadfe826df456c48da7159e981";
+// ─── Verificación de acceso (SHA-256 con salt) ───
+const PW_SALT  = "hsj-chatbox-2026-x7k9";
+const PW1_HASH = "3a09dc15b650c62ebe9887bfc998aa00fd1ea7cce5cf36e326cbb67609c4f1ac";
+const PW2_HASH = "832143bc51c03f9d3bfc57cda8c90672b26e9a93dbd827f8b6e24bf02695023d";
 
 // ─── Runtime state ───
 let knowledgeBase = [];
@@ -536,7 +536,7 @@ let GITHUB_TOKEN  = localStorage.getItem("hsj_gh_token") || null; // solo vive e
 
 // ─── SHA-256 helper ───
 async function sha256(message) {
-  const msgBuffer = new TextEncoder().encode(message);
+  const msgBuffer = new TextEncoder().encode(PW_SALT + message);
   const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2,'0')).join('');
