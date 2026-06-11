@@ -1,9 +1,89 @@
 {
   "entries": [
     {
-      "topic": "Horario de Verano",
-      "content": "Durante el mes de Junio el horario sera de 9:30 a 13:30 y recordar que las puertas se abren 10 minutos antes.",
-      "date": "2026-06-10T20:39:20.835Z"
+      "topic": "Tutores y contacto / Teachers and contact",
+      "content": "Los tutores de 2º Infantil para el curso 2026-2027 son María José, Olaya y Alejandro. Correos electrónicos: m.gracia@colegiohijasdesanjose.com, o.peyrona@colegiohijasdesanjose.com, a.martinez@colegiohijasdesanjose.com. // The 2nd year Infant teachers for the 2026-2027 school year are María José, Olaya and Alejandro. Emails: m.gracia@colegiohijasdesanjose.com, o.peyrona@colegiohijasdesanjose.com, a.martinez@colegiohijasdesanjose.com.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Horario del colegio / School timetable",
+      "content": "Jornada reducida del 8 al 15 de septiembre: de 9:30 a 13:30. Horario habitual del 16 de septiembre al 31 de mayo: de lunes a viernes de 9:00 a 14:00. Las puertas se abren 10 minutos antes de las horas indicadas. // Reduced hours from September 8th to 15th: 9:30 to 13:30. Regular timetable from September 16th to May 31st: Monday to Friday, 9:00 to 14:00. Doors open 10 minutes before the indicated times.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Inicio de curso / Start of school year",
+      "content": "Los primeros días se dedican al reencuentro y la motivación de los niños. // The first days are dedicated to reuniting and motivating the children.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Hábitos que se trabajan en clase / Habits worked on in class",
+      "content": "Estar sentados: poder estar sentados dibujando, leyendo o haciendo tareas. Turno de palabra: pedir y guardar el turno para hablar y escuchar, respetando a los demás. Autonomía: ser capaces de hacer cada vez más cosas solos (ropa, bata, abrigo); evitar cordones, cinturones o tirantes. Comunicación: expresarse a través de la música, la plástica y corporalmente. // Sitting down: being able to sit drawing, reading or doing tasks. Taking turns: asking for and waiting for their turn to speak and listen, respecting others. Autonomy: being able to do more things on their own (clothes, smock, coat); avoid laces, belts or straps. Communication: expressing themselves through music, arts and body language.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Material y preparación / Materials and preparation",
+      "content": "Hay que traer: botella de agua con pitorro, todos los libros con nombre y foto en la portada, el recibo escolar, un paquete de toallitas y una caja de pañuelos. Marcar TODA la ropa con nombre y primer apellido, y poner colgadores en la ropa (bata, chaqueta, chándal...). // Please bring: a water bottle with a spout, all books with name and photo on the cover, the school receipt, a pack of wet wipes and a box of tissues. Label ALL clothing with first name and surname, and sew hanging loops on clothes (smock, jacket, tracksuit...).",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Uniforme y Educación Física / Uniform and Physical Education",
+      "content": "Los niños vienen con uniforme todos los días excepto el día asignado a Educación Física (gimnasia/psicomotricidad), que vienen con chándal: 2ºA los LUNES, 2ºB los MARTES y 2ºC los MIÉRCOLES. // Children wear the uniform every day except on their assigned Physical Education (PE/gym) day, when they wear the tracksuit: 2ºA on MONDAYS, 2ºB on TUESDAYS and 2ºC on WEDNESDAYS.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Reuniones de padres / Parent meetings",
+      "content": "Hay tres reuniones de padres durante el curso: la primera en septiembre, la segunda en febrero o marzo y la tercera en junio. // There are three parent meetings during the school year: the first in September, the second in February or March and the third in June.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Ausencias y faltas / Absences",
+      "content": "Las ausencias se justifican por correo electrónico al tutor antes de las 10:00 de la mañana. // Absences must be justified by email to the tutor before 10:00 AM.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Cómo comunicarse con los tutores / How to contact the teachers",
+      "content": "Si tenéis que comentar algo a los tutores: esperad a que hayan salido todos los niños, hacedlo por correo electrónico o pedid cita para una tutoría. Las comunicaciones del colegio se realizan por correo, por Educamos y por Classroom. // If you need to tell the teachers something: wait until all children have left, do it by email or book a tutoring appointment. School communications are made by email, Educamos and Classroom.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Qué no se puede traer al colegio / What not to bring to school",
+      "content": "No traer juguetes ni objetos de valor. No traer zumos, batidos ni Actimeles. Está prohibido venir con pañal, chupete o biberón. // Do not bring toys or valuables. Do not bring juices, milkshakes or Actimel drinks. Coming with a nappy, dummy/pacifier or bottle is not allowed.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Si el niño se hace pis / If the child wets themselves",
+      "content": "Se cambiará al niño o niña si se hace pis. Si hay que llamar a la familia, es importante tener los teléfonos actualizados. // The child will be changed if they wet themselves. If the family needs to be called, please keep phone numbers up to date.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Niños enfermos y piojos / Sick children and head lice",
+      "content": "Los niños enfermos se quedan en casa. En el colegio no se dan medicinas. Si el niño tiene piojos, también deberá quedarse en casa. // Sick children must stay at home. No medicines are given at school. If a child has head lice, they must also stay at home.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Salidas culturales y excursiones / Cultural outings and trips",
+      "content": "En las salidas culturales los niños van con chándal. Se comunicará el destino y el precio de cada salida, junto con instrucciones para completar el pago y la autorización. Es importante respetar los plazos de excursiones y comunicaciones, contestando en las fechas indicadas. // On cultural outings children wear the tracksuit. The destination and price of each trip will be communicated, along with instructions to complete the payment and authorisation. Please respect the deadlines for trips and communications, replying by the indicated dates.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Salida del colegio / School pick-up",
+      "content": "A la hora de la salida, por favor tened paciencia: los niños salen en orden y se entregan de uno en uno. // At pick-up time, please be patient: children leave in order and are handed over one by one.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Objetivos del curso / Learning objectives",
+      "content": "Objetivos de 2º Infantil: esquema corporal, números hasta el 10 (familias), vocales y primeras consonantes (M, P, L, S), copiar palabras, colores, formas geométricas y seriaciones, inicio al concepto de la suma e iniciación a la escritura en cuadrícula. // 2nd year Infant objectives: body schema, numbers up to 10 (families), vowels and first consonants (M, P, L, S), copying words, colours, geometric shapes and patterns, introduction to the concept of addition and introduction to writing on grid paper.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Web de actividades y Classroom / Activities website and Classroom",
+      "content": "Hay una web con actividades, juegos y fichas de trabajo: https://sites.google.com/colegiohijasdesanjose.com/hsj1infantil. Todas las informaciones de vuestros hijos se realizan a través de Classroom. Quien no esté dentro o no sepa cómo entrar, que pida ayuda a los tutores. // There is a website with activities, games and worksheets: https://sites.google.com/colegiohijasdesanjose.com/hsj1infantil. All information about your children is shared through Classroom. If you are not in it or don't know how to access it, ask the teachers for help.",
+      "date": "2026-06-11T00:00:00.000Z"
+    },
+    {
+      "topic": "Lo más importante / What matters most",
+      "content": "Lo más importante son los niños: su desarrollo, su educación y sus relaciones sociales. Para ello necesitamos colaboración y confianza entre la familia y el equipo. La confianza es un proceso largo de aprendizaje; a veces las cosas parecen lo que no son y los niños cuentan su versión, por eso ante cualquier duda lo primero es siempre hablar con los tutores. // The most important thing is the children: their development, education and social relationships. For this we need collaboration and trust between family and team. Trust is a long learning process; sometimes things are not what they seem and children tell their own version, so if in doubt, always talk to the teachers first.",
+      "date": "2026-06-11T00:00:00.000Z"
     }
   ]
 }
